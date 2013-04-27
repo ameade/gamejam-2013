@@ -3,28 +3,32 @@
 # Non-blocking input
 if [ -t 0 ]; then stty -echo -icanon time 0 min 0; fi
 
+screen=()
 function create_screen(){
-    clear
+    for i in {1..4}; do
+        screen[$i]="Score"
+    done
 
+    # prints score divider on line 5
+    div=$( printf "%100s" );
+    screen[5]=${div// /-}
+
+    for i in {6..24}; do
+        if [ "$i" = "$playery" ]; then
+            screen[$i]="x"
+        else
+            screen[$i]="blah"
+        fi
+    done
 }
 
 function draw_screen(){
     playery=$1
 
+    create_screen
     clear
-    for i in {1..4}; do
-        echo "Score"
-    done
-
-    # prints score divider on line 5
-    div=$( printf "%100s" );
-    echo ${div// /-}
-
-    for i in {6..24}; do
-        if [ "$i" = "$playery" ]; then
-            echo "x"
-        fi
-        echo ""
+    for i in ${!screen[*]}; do
+        echo ${screen[$i]}
     done
 }
 
