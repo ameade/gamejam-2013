@@ -30,7 +30,7 @@ bottom_enemy_pic=(' / \'
                  )
 bottom_enemy_width=5
 
-bottom_enemy_x=50
+bottom_enemy_x=200
 bottom_enemy_y=19
 
 top_enemy_pic=(' -,     (\_/)     ,-'
@@ -40,7 +40,7 @@ top_enemy_pic=(' -,     (\_/)     ,-'
               )
 top_enemy_width=21
 
-top_enemy_x=50
+top_enemy_x=150
 top_enemy_y=6
 
 screen=()
@@ -64,8 +64,9 @@ function set_screen_string(){
     string=${screen[$row]}
     first_part=${string:0:$col}
     second_part=${string:$col+${#character}}
+    total_string="$first_part$character$second_part"
 
-    screen[$row]="$first_part$character$second_part"
+    screen[$row]=${total_string:0:$SCREEN_WIDTH}
 }
 
 function put_pic_on_screen(){
@@ -165,10 +166,16 @@ function update_player(){
 
 function update_enemies(){
     #move bottom enemy
-    bottom_enemy_x=$[$bottom_enemy_x - 2]
+    bottom_enemy_x=$[ $bottom_enemy_x - 2 ]
+    if [[ $[ -1 * $bottom_enemy_width ] > $bottom_enemy_x ]]; then
+        bottom_enemy_x=$[$SCREEN_WIDTH + ( $RANDOM % 200)]
+    fi
 
-    #move top eney
-    top_enemy_x=$[$top_enemy_x - 2]
+    #move top enemy
+    top_enemy_x=$[ $top_enemy_x - 2 ]
+    if [[ $[ -1 * $top_enemy_width ] > $top_enemy_x ]]; then
+        top_enemy_x=$[$SCREEN_WIDTH + ( $RANDOM % 100)]
+    fi
 }
 
 function update(){
