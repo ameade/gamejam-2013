@@ -1,9 +1,22 @@
 #!/bin/bash
 
-# Non-blocking input
-if [ -t 0 ]; then stty -echo -icanon time 0 min 0; fi
-
 screen=()
+keypress=''
+playery=23
+playerx=10
+
+function set_screen_character(){
+    character=$1
+    row=$2
+    col=$3
+
+    string=${screen[$i]}
+    first_part=${string:0:$col}
+    second_part=${string:$col+1}
+
+    screen[$i]="$first_part$character$second_part"
+}
+
 function create_screen(){
     for i in {1..4}; do
         screen[$i]="Score"
@@ -14,10 +27,13 @@ function create_screen(){
     screen[5]=${div// /-}
 
     for i in {6..24}; do
+        # make empty
+        #TODO: Wtf can't i do 100 spaces?
+        div=$( printf "%100s" );
+        screen[$i]=${div// /.}
+        # populate screen
         if [ "$i" = "$playery" ]; then
-            screen[$i]="x"
-        else
-            screen[$i]="blah"
+            set_screen_character "x" $i $playerx
         fi
     done
 }
@@ -32,8 +48,6 @@ function draw_screen(){
     done
 }
 
-keypress=''
-playery=23
 while [ "$keypress" != "q" ]; do
     #reset keypress
     keypress=''
@@ -42,11 +56,5 @@ while [ "$keypress" != "q" ]; do
         playery=$[ $playery - 1 ]
     fi
     draw_screen $playery
-    sleep 0.10
+    sleep 0.05
 done
-
-echo "Ending the game"
-
-# Back to blocking input
-if [ -t 0 ]; then stty sane; fi
-exit 0
