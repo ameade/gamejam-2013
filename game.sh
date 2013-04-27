@@ -1,4 +1,11 @@
 #!/bin/bash
+player_pic=('      ________'
+            '     /  ||   \\'
+            ' __ /___||____\\___'
+            '|  |     |          \'
+            '|/ \_____|______/ \_| '
+            ' \_/            \_/'
+           )
 
 screen=()
 keypress=''
@@ -17,20 +24,21 @@ function set_screen_string(){
     screen[$row]="$first_part$character$second_part"
 }
 
-function put_player_on_screen(){
-    set_screen_string "x" $playery $playerx
-    player_pic=('      ________'
-                '     /  ||   \\'
-                ' __ /___||____\\___'
-                '|  |     |          \'
-                '|/ \_____|______/ \_| '
-                ' \_/            \_/'
-               )
-    for i in ${!player_pic[*]}; do
-        myY=$[ $playery + $i ]
-        line=${player_pic[$i]}
-        set_screen_string "$line" $myY $playerx
+function put_pic_on_screen(){
+    objectY=$1
+    shift
+    objectX=$2
+    shift
+    pic=("${@}")
+    for i in ${!pic[*]}; do
+        myY=$[ $objectY + $i ]
+        line="${pic[$i]}"
+        set_screen_string "$line" $myY $objectX
     done
+}
+
+function put_player_on_screen(){
+    put_pic_on_screen $playery $playerx "${player_pic[@]}"
 }
 
 function create_screen(){
