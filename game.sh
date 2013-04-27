@@ -5,6 +5,10 @@ SCREEN_HEIGHT=24
 BACKGROUND_CHAR=' '
 
 dead=0
+on_ground=1
+on_ceiling=0
+#up (-1), down(1), or still(0)
+moving=0
 
 player_pic=('      ________'
             '     /  ||   \\'
@@ -15,7 +19,7 @@ player_pic=('      ________'
            )
 player_width=21
 player_hit_point_x=22
-player_hit_point_y=4
+player_hit_point_y=3
 
 bottom_enemy_pic=(' / \'
                   ' \_/'
@@ -26,13 +30,23 @@ bottom_enemy_pic=(' / \'
                  )
 bottom_enemy_width=5
 
+bottom_enemy_x=50
+bottom_enemy_y=19
+
+top_enemy_pic=(' -,     (\_/)     ,-'
+               '  /`-`--(* *)--`-`\'
+               ' /      (___)      \'
+               '/.-.-.-/ " " \-.-.-.\'
+              )
+top_enemy_width=21
+
+top_enemy_x=50
+top_enemy_y=6
+
 screen=()
 keypress=''
 playery=19
 playerx=2
-
-bottom_enemy_x=50
-bottom_enemy_y=19
 
 score=0
 
@@ -73,6 +87,7 @@ function put_player_on_screen(){
 
 function put_enemies_on_screen(){
     put_pic_on_screen $bottom_enemy_y $bottom_enemy_x "${bottom_enemy_pic[@]}"
+    put_pic_on_screen $top_enemy_y $top_enemy_x "${top_enemy_pic[@]}"
 }
 
 function create_screen(){
@@ -112,9 +127,28 @@ function check_input(){
 }
 
 function update_player(){
-    if [ "$keypress" = "n" ]; then
-        playery=$[ $playery - 1 ]
+
+    if [ $moving < 0 ] && [ $playery = 6 ]; then
+       on_ceiling=1
+       moving=0
+    elif [ $moving > 0 ] && [ $[ $playery + ${#player_pic[*]} - 1 ] = $SCREEN_HEIGHT ]; then
+        on_ground=1
+        moving=0
     fi
+
+    if [ "$keypress" = "n" ]; then
+        if [ $on_ground == 1 ]; then
+            moving=-1
+            on_ground=0
+        fi
+        if [ $on_ceiling == 1 ]; then
+            moving=1
+            on_ceiling=0
+        fi
+    fi
+
+    playery=$[ $playery + $moving ]
+
 
     #check for hit
     #if the hit spot on the player is not the bg character then a hit happened
@@ -131,7 +165,10 @@ function update_player(){
 
 function update_enemies(){
     #move bottom enemy
-    bottom_enemy_x=$[$bottom_enemy_x - 1]
+    bottom_enemy_x=$[$bottom_enemy_x - 2]
+
+    #move top eney
+    top_enemy_x=$[$top_enemy_x - 2]
 }
 
 function update(){
@@ -147,5 +184,5 @@ function update(){
 
 while [ "$keypress" != "q" ]; do
     update
-    sleep 0.05
+    sleep 0.01
 done
