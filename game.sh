@@ -18,26 +18,32 @@ bottom_enemy_pic=(' / \'
                   ' / \'
                   '/   \'
                  )
+bottom_enemy_width=5
 
 screen=()
 keypress=''
-playery=11
+playery=19
 playerx=2
 
 bottom_enemy_x=50
 bottom_enemy_y=19
+
+score=0
 
 function set_screen_string(){
     character=$1
     row=$2
     col=$3
 
+    if (($col < 0)); then
+        offset=$[$col * -1]
+        character=${character:$offset}
+        col=0
+    fi
+
     string=${screen[$row]}
     first_part=${string:0:$col}
     second_part=${string:$col+${#character}}
-    echo "HERE IT IS"
-    echo "$col"
-
 
     screen[$row]="$first_part$character$second_part"
 }
@@ -65,7 +71,7 @@ function put_enemies_on_screen(){
 
 function create_screen(){
     for i in {1..4}; do
-        screen[$i]="Score"
+        screen[$i]="Score $score"
     done
 
     # prints score divider on line 5
@@ -76,11 +82,12 @@ function create_screen(){
         # make empty
         #TODO: Wtf can't i do 100 spaces?
         div=$( printf "%*s" "$SCREEN_WIDTH");
-        screen[$i]=${div// /.}
+        bg=' '
+        screen[$i]=${div// /$bg}
     done
     # populate screen
-    put_player_on_screen
     put_enemies_on_screen
+    put_player_on_screen
 }
 
 function draw_screen(){
@@ -106,15 +113,18 @@ function update_player(){
 
 }
 
-#function update_enemies(){
-#
-#}
+function update_enemies(){
+    #move bottom enemy
+    bottom_enemy_x=$[$bottom_enemy_x - 1]
+}
 
 function update(){
     check_input
     update_player
-#    update_enemies
+    update_enemies
+
     draw_screen $playery
+    score=$[$score + 1]
 }
 
 while [ "$keypress" != "q" ]; do
