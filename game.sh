@@ -1,4 +1,8 @@
 #!/bin/bash
+
+SCREEN_WIDTH=100
+SCREEN_HEIGHT=24
+
 player_pic=('      ________'
             '     /  ||   \\'
             ' __ /___||____\\___'
@@ -9,7 +13,6 @@ player_pic=('      ________'
 
 bottom_enemy_pic=(' / \'
                   ' \_/'
-                  '  |'
                   '--|--'
                   '  |'
                   ' / \'
@@ -22,7 +25,7 @@ playery=11
 playerx=2
 
 bottom_enemy_x=50
-bottom_enemy_y=12
+bottom_enemy_y=19
 
 function set_screen_string(){
     character=$1
@@ -66,13 +69,13 @@ function create_screen(){
     done
 
     # prints score divider on line 5
-    div=$( printf "%100s" );
+    div=$( printf "%*s" "$SCREEN_WIDTH" );
     screen[5]=${div// /-}
 
-    for i in {6..24}; do
+    for ((i=6; i<=$SCREEN_HEIGHT; i++)); do
         # make empty
         #TODO: Wtf can't i do 100 spaces?
-        div=$( printf "%100s" );
+        div=$( printf "%*s" "$SCREEN_WIDTH");
         screen[$i]=${div// /.}
     done
     # populate screen
