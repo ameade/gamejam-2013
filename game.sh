@@ -10,11 +10,15 @@ function set_screen_character(){
     row=$2
     col=$3
 
-    string=${screen[$i]}
+    string=${screen[$row]}
     first_part=${string:0:$col}
     second_part=${string:$col+1}
 
-    screen[$i]="$first_part$character$second_part"
+    screen[$row]="$first_part$character$second_part"
+}
+
+function draw_player_on_screen(){
+        set_screen_character "x" $playery $playerx
 }
 
 function create_screen(){
@@ -31,11 +35,9 @@ function create_screen(){
         #TODO: Wtf can't i do 100 spaces?
         div=$( printf "%100s" );
         screen[$i]=${div// /.}
-        # populate screen
-        if [ "$i" = "$playery" ]; then
-            set_screen_character "x" $i $playerx
-        fi
     done
+    # populate screen
+    draw_player_on_screen
 }
 
 function draw_screen(){
@@ -52,13 +54,23 @@ function check_input(){
     #reset keypress
     keypress=''
     read keypress
+}
+
+function update_player(){
     if [ "$keypress" = "n" ]; then
         playery=$[ $playery - 1 ]
     fi
+
 }
+
+#function update_enemies(){
+#
+#}
 
 function update(){
     check_input
+    update_player
+#    update_enemies
     draw_screen $playery
 }
 
