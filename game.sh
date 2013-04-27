@@ -2,23 +2,35 @@
 
 screen=()
 keypress=''
-playery=23
-playerx=10
+playery=15
+playerx=1
 
-function set_screen_character(){
+function set_screen_string(){
     character=$1
     row=$2
     col=$3
 
     string=${screen[$row]}
     first_part=${string:0:$col}
-    second_part=${string:$col+1}
+    second_part=${string:$col+${#character}}
 
     screen[$row]="$first_part$character$second_part"
 }
 
-function draw_player_on_screen(){
-        set_screen_character "x" $playery $playerx
+function put_player_on_screen(){
+    set_screen_string "x" $playery $playerx
+    player_pic=('      ________'
+                '     /  ||   \\'
+                ' __ /___||____\\___'
+                '|  |     |          \'
+                '|/ \_____|______/ \_| '
+                ' \_/            \_/'
+               )
+    for i in ${!player_pic[*]}; do
+        myY=$[ $playery + $i ]
+        line=${player_pic[$i]}
+        set_screen_string "$line" $myY $playerx
+    done
 }
 
 function create_screen(){
@@ -37,7 +49,7 @@ function create_screen(){
         screen[$i]=${div// /.}
     done
     # populate screen
-    draw_player_on_screen
+    put_player_on_screen
 }
 
 function draw_screen(){
@@ -46,7 +58,7 @@ function draw_screen(){
     create_screen
     clear
     for i in ${!screen[*]}; do
-        echo ${screen[$i]}
+        echo "${screen[$i]}"
     done
 }
 
