@@ -48,7 +48,7 @@ function draw_screen(){
     done
 }
 
-while [ "$keypress" != "q" ]; do
+function update(){
     #reset keypress
     keypress=''
     read keypress
@@ -56,5 +56,9 @@ while [ "$keypress" != "q" ]; do
         playery=$[ $playery - 1 ]
     fi
     draw_screen $playery
+}
+
+while [ "$keypress" != "q" ]; do
+    update
     sleep 0.05
 done
