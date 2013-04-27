@@ -2,14 +2,20 @@
 
 SCREEN_WIDTH=100
 SCREEN_HEIGHT=24
+BACKGROUND_CHAR=' '
+
+dead=0
 
 player_pic=('      ________'
             '     /  ||   \\'
             ' __ /___||____\\___'
             '|  |     |          \'
-            '|/ \_____|______/ \_| '
+            '|/ \_____|______/ \_|'
             ' \_/            \_/'
            )
+player_width=21
+player_hit_point_x=22
+player_hit_point_y=4
 
 bottom_enemy_pic=(' / \'
                   ' \_/'
@@ -82,8 +88,7 @@ function create_screen(){
         # make empty
         #TODO: Wtf can't i do 100 spaces?
         div=$( printf "%*s" "$SCREEN_WIDTH");
-        bg=' '
-        screen[$i]=${div// /$bg}
+        screen[$i]=${div// /$BACKGROUND_CHAR}
     done
     # populate screen
     put_enemies_on_screen
@@ -111,6 +116,17 @@ function update_player(){
         playery=$[ $playery - 1 ]
     fi
 
+    #check for hit
+    #if the hit spot on the player is not the bg character then a hit happened
+    current_hit_y=$[$playery+$player_hit_point_y]
+    current_hit_x=$[$playerx+$player_hit_point_x]
+    line="${screen[$current_hit_y]}"
+    hit_spot_char="${line:$current_hit_x:1}"
+
+    if [ "$hit_spot_char" != "" ] && [ "$hit_spot_char" != "$BACKGROUND_CHAR" ]; then
+        dead=1
+    fi
+
 }
 
 function update_enemies(){
@@ -124,7 +140,9 @@ function update(){
     update_enemies
 
     draw_screen $playery
-    score=$[$score + 1]
+    if [ $dead != 1 ]; then
+        score=$[$score + 1]
+    fi
 }
 
 while [ "$keypress" != "q" ]; do
