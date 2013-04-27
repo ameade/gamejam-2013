@@ -7,10 +7,22 @@ player_pic=('      ________'
             ' \_/            \_/'
            )
 
+bottom_enemy_pic=(' / \'
+                  ' \_/'
+                  '  |'
+                  '--|--'
+                  '  |'
+                  ' / \'
+                  '/   \'
+                 )
+
 screen=()
 keypress=''
-playery=15
-playerx=1
+playery=11
+playerx=2
+
+bottom_enemy_x=50
+bottom_enemy_y=12
 
 function set_screen_string(){
     character=$1
@@ -20,14 +32,17 @@ function set_screen_string(){
     string=${screen[$row]}
     first_part=${string:0:$col}
     second_part=${string:$col+${#character}}
+    echo "HERE IT IS"
+    echo "$col"
+
 
     screen[$row]="$first_part$character$second_part"
 }
 
 function put_pic_on_screen(){
     objectY=$1
-    shift
     objectX=$2
+    shift
     shift
     pic=("${@}")
     for i in ${!pic[*]}; do
@@ -39,6 +54,10 @@ function put_pic_on_screen(){
 
 function put_player_on_screen(){
     put_pic_on_screen $playery $playerx "${player_pic[@]}"
+}
+
+function put_enemies_on_screen(){
+    put_pic_on_screen $bottom_enemy_y $bottom_enemy_x "${bottom_enemy_pic[@]}"
 }
 
 function create_screen(){
@@ -58,6 +77,7 @@ function create_screen(){
     done
     # populate screen
     put_player_on_screen
+    put_enemies_on_screen
 }
 
 function draw_screen(){
