@@ -48,13 +48,17 @@ function draw_screen(){
     done
 }
 
-function update(){
+function check_input(){
     #reset keypress
     keypress=''
     read keypress
     if [ "$keypress" = "n" ]; then
         playery=$[ $playery - 1 ]
     fi
+}
+
+function update(){
+    check_input
     draw_screen $playery
 }
 
