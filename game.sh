@@ -160,16 +160,24 @@ function update_player(){
 
     if [ "$keypress" = "n" ]; then
         if [ $on_ground == 1 ]; then
-            moving=-1
+            moving=-2
             on_ground=0
         fi
         if [ $on_ceiling == 1 ]; then
-            moving=1
+            moving=2
             on_ceiling=0
         fi
     fi
 
     playery=$[ $playery + $moving ]
+
+    if [ $playery -lt 6 ]; then
+        playery=6
+    fi
+
+    if [ $playery -gt $[ $SCREEN_HEIGHT - ${#player_pic[*]}] ]; then
+        playery=$[$SCREEN_HEIGHT - ${#player_pic[*]} + 1 ]
+    fi
 
 
     #check for hit
@@ -188,13 +196,13 @@ function update_player(){
 function update_enemies(){
     #move bottom enemy
     bottom_enemy_x=$[ $bottom_enemy_x - 2 ]
-    if [[ $[ -1 * $bottom_enemy_width ] > $bottom_enemy_x ]]; then
+    if [ $[ -1 * $bottom_enemy_width ] -gt $bottom_enemy_x ]; then
         bottom_enemy_x=$[$SCREEN_WIDTH + ( $RANDOM % 200)]
     fi
 
     #move top enemy
     top_enemy_x=$[ $top_enemy_x - 2 ]
-    if [[ $[ -1 * $top_enemy_width ] > $top_enemy_x ]]; then
+    if [ $[ -1 * $top_enemy_width ] -gt $top_enemy_x ]; then
         top_enemy_x=$[$SCREEN_WIDTH + ( $RANDOM % 100)]
     fi
 }
