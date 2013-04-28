@@ -17,6 +17,21 @@ player_pic=('      ________'
             '|/ \_____|______/ \_|'
             ' \_/            \_/'
            )
+
+player_pic_alt=('| (  )---------(  )--|'
+                '|  ||           ||   |'
+                '|  | ----------- |   |'
+                '|  | ----------- |   |'
+                '|  ||           ||   |'
+                '|_(__)_________(__)__|'
+               )
+
+player_pic_top=(' / \____________/ \__'
+                '|\_/     |      \_/ |'
+                '|__|____ |____  ___/'
+                '   \    ||    //'
+                '    \___||___//'
+               )
 player_width=21
 player_hit_point_x=22
 player_hit_point_y=3
@@ -83,7 +98,13 @@ function put_pic_on_screen(){
 }
 
 function put_player_on_screen(){
-    put_pic_on_screen $playery $playerx "${player_pic[@]}"
+    if [ $on_ground = 0 ] && [ $on_ceiling = 0 ]; then
+        put_pic_on_screen $playery $playerx "${player_pic_alt[@]}"
+    elif [ $on_ceiling = 1 ]; then
+        put_pic_on_screen $playery $playerx "${player_pic_top[@]}"
+    else
+        put_pic_on_screen $playery $playerx "${player_pic[@]}"
+    fi
 }
 
 function put_enemies_on_screen(){
