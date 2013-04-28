@@ -4,7 +4,6 @@ SCREEN_WIDTH=100
 SCREEN_HEIGHT=24
 BACKGROUND_CHAR=' '
 
-is_game_started=0
 start_screen=('_________ _______  _______ _________   ______   _______ _________          _______               '
               '\__   __/(  ____ \(  ____ \\__   __/  (  __  \ (  ____ )\__   __/|\     /|(  ____ \             '
               '   ) (   | (    \/| (    \/   ) (     | (  \  )| (    )|   ) (   | )   ( || (    \/ _            '
@@ -26,12 +25,16 @@ start_screen=('_________ _______  _______ _________   ______   _______ _________
               ' Press "n" to start game. Then use "n" to dodge.'
              )
 
-
-dead=0
-on_ground=1
-on_ceiling=0
-#up (-1), down(1), or still(0)
-moving=0
+death_screen=(
+'          _______               _        _______  _______  _______ '
+'|\     /|(  ___  )|\     /|    ( \      (  ___  )(  ____ \(  ____ \'
+'( \   / )| (   ) || )   ( |    | (      | (   ) || (    \/| (    \/'
+' \ (_) / | |   | || |   | |    | |      | |   | || (_____ | (__    '
+'  \   /  | |   | || |   | |    | |      | |   | |(_____  )|  __)   '
+'   ) (   | |   | || |   | |    | |      | |   | |      ) || (      '
+'   | |   | (___) || (___) |    | (____/\| (___) |/\____) || (____/\'
+'   \_/   (_______)(_______)    (_______/(_______)\_______)(_______/'
+   )
 
 player_pic=('      ________'
             '     /  ||   \\'
@@ -55,9 +58,6 @@ player_pic_top=(' / \____________/ \__'
                 '   \    ||    //'
                 '    \___||___//'
                )
-player_width=21
-player_hit_point_x=22
-player_hit_point_y=3
 
 bottom_enemy_pic=(' / \'
                   ' \_/'
@@ -66,16 +66,27 @@ bottom_enemy_pic=(' / \'
                   ' / \'
                   '/   \'
                  )
-bottom_enemy_width=5
-
-bottom_enemy_x=200
-bottom_enemy_y=19
 
 top_enemy_pic=(' -,     (\_/)     ,-'
                '  /`-`--(* *)--`-`\'
                ' /      (___)      \'
                '/.-.-.-/ " " \-.-.-.\'
               )
+
+is_game_started=0
+
+dead=0
+on_ground=1
+on_ceiling=0
+#up (-1), down(1), or still(0)
+moving=0
+player_width=21
+player_hit_point_x=22
+player_hit_point_y=3
+bottom_enemy_width=5
+
+bottom_enemy_x=200
+bottom_enemy_y=19
 top_enemy_width=21
 
 top_enemy_x=150
@@ -150,6 +161,18 @@ function create_in_game_screen(){
     # populate screen
     put_enemies_on_screen
     put_player_on_screen
+}
+
+function create_death_screen(){
+    for ((i=0; i<=$SCREEN_HEIGHT; i++)); do
+        # make empty
+        div=$( printf "%*s" "$SCREEN_WIDTH");
+        screen[$i]=${div// /$BACKGROUND_CHAR}
+    done
+    for i in ${!death_screen[*]}; do
+        line="${death_screen[$i]}"
+        screen[$i]=$line
+    done
 }
 
 function create_start_screen(){
@@ -249,6 +272,13 @@ function update(){
         update_enemies
         score=$[$score + 1]
         create_in_game_screen
+    else
+        create_death_screen
+        if [ "$keypress" == "n" ]; then
+            is_game_started=0
+            score=0;
+            dead=0
+        fi
     fi
 
     draw_screen
