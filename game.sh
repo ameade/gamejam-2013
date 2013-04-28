@@ -121,7 +121,6 @@ function put_enemies_on_screen(){
 function create_in_game_screen(){
     for ((i=0; i<=$SCREEN_HEIGHT; i++)); do
         # make empty
-        #TODO: Wtf can't i do 100 spaces?
         div=$( printf "%*s" "$SCREEN_WIDTH");
         screen[$i]=${div// /$BACKGROUND_CHAR}
     done
@@ -139,7 +138,6 @@ function create_in_game_screen(){
 function create_start_screen(){
     for ((i=0; i<=$SCREEN_HEIGHT; i++)); do
         # make empty
-        #TODO: Wtf can't i do 100 spaces?
         div=$( printf "%*s" "$SCREEN_WIDTH");
         screen[$i]=${div// /$BACKGROUND_CHAR}
     done
