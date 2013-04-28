@@ -24,6 +24,9 @@ start_screen=(
 ''
 ''
 ' Press "n" to start game. Then use "n" to dodge.'
+''
+''
+" Don't let the front of your car hit any of the innocent."
 )
 
 death_screen=(
