@@ -34,6 +34,9 @@ death_screen=(
 '   ) (   | |   | || |   | |    | |      | |   | |      ) || (      '
 '   | |   | (___) || (___) |    | (____/\| (___) |/\____) || (____/\'
 '   \_/   (_______)(_______)    (_______/(_______)\_______)(_______/'
+''
+''
+' Press "n" to restart game.'
    )
 
 player_pic=('      ________'
@@ -73,31 +76,33 @@ top_enemy_pic=(' -,     (\_/)     ,-'
                '/.-.-.-/ " " \-.-.-.\'
               )
 
-is_game_started=0
+function reset_variables(){
+    is_game_started=0
 
-dead=0
-on_ground=1
-on_ceiling=0
-#up (-1), down(1), or still(0)
-moving=0
-player_width=21
-player_hit_point_x=22
-player_hit_point_y=3
-bottom_enemy_width=5
+    dead=0
+    on_ground=1
+    on_ceiling=0
+    #up (-1), down(1), or still(0)
+    moving=0
+    player_width=21
+    player_hit_point_x=22
+    player_hit_point_y=3
+    bottom_enemy_width=5
 
-bottom_enemy_x=200
-bottom_enemy_y=19
-top_enemy_width=21
+    bottom_enemy_x=200
+    bottom_enemy_y=19
+    top_enemy_width=21
 
-top_enemy_x=150
-top_enemy_y=6
+    top_enemy_x=150
+    top_enemy_y=6
 
-screen=()
-keypress=''
-playery=19
-playerx=2
+    screen=()
+    keypress=''
+    playery=19
+    playerx=2
 
-score=0
+    score=0
+}
 
 function set_screen_string(){
     character=$1
@@ -275,15 +280,14 @@ function update(){
     else
         create_death_screen
         if [ "$keypress" == "n" ]; then
-            is_game_started=0
-            score=0;
-            dead=0
+            reset_variables
         fi
     fi
 
     draw_screen
 }
 
+reset_variables
 while [ "$keypress" != "q" ]; do
     update
     sleep 0.01
