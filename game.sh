@@ -4,6 +4,12 @@ SCREEN_WIDTH=100
 SCREEN_HEIGHT=24
 BACKGROUND_CHAR=' '
 
+is_game_started=0
+start_screen=('Test Drive: Hot Rubber'
+              ''
+             )
+
+
 dead=0
 on_ground=1
 on_ceiling=0
@@ -112,8 +118,8 @@ function put_enemies_on_screen(){
     put_pic_on_screen $top_enemy_y $top_enemy_x "${top_enemy_pic[@]}"
 }
 
-function create_screen(){
-    for ((i=1; i<=$SCREEN_HEIGHT; i++)); do
+function create_in_game_screen(){
+    for ((i=0; i<=$SCREEN_HEIGHT; i++)); do
         # make empty
         #TODO: Wtf can't i do 100 spaces?
         div=$( printf "%*s" "$SCREEN_WIDTH");
@@ -130,10 +136,15 @@ function create_screen(){
     put_player_on_screen
 }
 
-function draw_screen(){
-    playery=$1
+function create_start_screen(){
+    for i in ${!start_screen[*]}; do
+        # make empty
+        line="${start_screen[$i]}"
+        screen[$i]=$line
+    done
+}
 
-    create_screen
+function draw_screen(){
     clear
     for i in ${!screen[*]}; do
         echo "${screen[$i]}"
@@ -193,7 +204,7 @@ function update_player(){
 
 function update_enemies(){
     #move bottom enemy
-    bottom_enemy_x=$[ $bottom_enemy_x - 3 ]
+    bottom_enemy_x=$[ $bottom_enemy_x - 2 ]
     if [ $[ -1 * $bottom_enemy_width ] -gt $bottom_enemy_x ]; then
         bottom_enemy_x=$[$SCREEN_WIDTH + ( $RANDOM % 200)]
     fi
@@ -207,13 +218,20 @@ function update_enemies(){
 
 function update(){
     check_input
-    update_player
-    update_enemies
 
-    draw_screen $playery
-    if [ $dead != 1 ]; then
+    if [ $is_game_started -eq 0 ]; then
+        create_start_screen
+        if [ "$keypress" == "n" ]; then
+            is_game_started=1
+        fi
+    elif [ $dead -eq 0 ] && [ $is_game_started -eq 1 ]; then
+        update_player
+        update_enemies
         score=$[$score + 1]
+        create_in_game_screen
     fi
+
+    draw_screen
 }
 
 while [ "$keypress" != "q" ]; do
