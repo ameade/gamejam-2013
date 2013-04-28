@@ -257,6 +257,14 @@ function update_player(){
         dead=1
     fi
 
+    current_hit_y=$[$playery+$player_hit_point_y+2]
+    current_hit_x=$[$playerx+$player_hit_point_x]
+    line="${screen[$current_hit_y]}"
+    hit_spot_char="${line:$current_hit_x:1}"
+    if [ "$hit_spot_char" != "" ] && [ "$hit_spot_char" != "$BACKGROUND_CHAR" ]; then
+        dead=1
+    fi
+
 }
 
 function update_enemies(){
