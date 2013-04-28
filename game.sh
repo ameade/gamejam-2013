@@ -113,20 +113,18 @@ function put_enemies_on_screen(){
 }
 
 function create_screen(){
-    for i in {1..4}; do
-        screen[$i]="Score $score"
-    done
-
-    # prints score divider on line 5
-    div=$( printf "%*s" "$SCREEN_WIDTH" );
-    screen[5]=${div// /-}
-
-    for ((i=6; i<=$SCREEN_HEIGHT; i++)); do
+    for ((i=1; i<=$SCREEN_HEIGHT; i++)); do
         # make empty
         #TODO: Wtf can't i do 100 spaces?
         div=$( printf "%*s" "$SCREEN_WIDTH");
         screen[$i]=${div// /$BACKGROUND_CHAR}
     done
+    screen[4]="Score $score"
+
+    # prints score divider on line 5
+    div=$( printf "%*s" "$SCREEN_WIDTH" );
+    screen[5]=${div// /-}
+
     # populate screen
     put_enemies_on_screen
     put_player_on_screen
