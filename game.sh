@@ -91,12 +91,15 @@ function reset_variables(){
     player_width=21
     player_hit_point_x=22
     player_hit_point_y=3
-    bottom_enemy_width=5
 
+    bottom_enemy_width=5
     bottom_enemy_x=200
     bottom_enemy_y=19
-    top_enemy_width=21
+    fast_bottom_enemy_width=5
+    fast_bottom_enemy_x=200
+    fast_bottom_enemy_y=19
 
+    top_enemy_width=21
     top_enemy_x=150
     top_enemy_y=6
 
@@ -152,6 +155,7 @@ function put_player_on_screen(){
 
 function put_enemies_on_screen(){
     put_pic_on_screen $bottom_enemy_y $bottom_enemy_x "${bottom_enemy_pic[@]}"
+    put_pic_on_screen $fast_bottom_enemy_y $fast_bottom_enemy_x "${bottom_enemy_pic[@]}"
     put_pic_on_screen $top_enemy_y $top_enemy_x "${top_enemy_pic[@]}"
 }
 
@@ -259,6 +263,12 @@ function update_enemies(){
     bottom_enemy_x=$[ $bottom_enemy_x - 2 ]
     if [ $[ -1 * $bottom_enemy_width ] -gt $bottom_enemy_x ]; then
         bottom_enemy_x=$[$SCREEN_WIDTH + ( $RANDOM % 200)]
+    fi
+
+    #move fast bottom enemy
+    fast_bottom_enemy_x=$[ $fast_bottom_enemy_x - 6 ]
+    if [ $[ -1 * $fast_bottom_enemy_width ] -gt $fast_bottom_enemy_x ]; then
+        fast_bottom_enemy_x=$[$SCREEN_WIDTH + ( $RANDOM % 200)]
     fi
 
     #move top enemy
