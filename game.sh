@@ -193,13 +193,13 @@ function update_player(){
 
 function update_enemies(){
     #move bottom enemy
-    bottom_enemy_x=$[ $bottom_enemy_x - 2 ]
+    bottom_enemy_x=$[ $bottom_enemy_x - 3 ]
     if [ $[ -1 * $bottom_enemy_width ] -gt $bottom_enemy_x ]; then
         bottom_enemy_x=$[$SCREEN_WIDTH + ( $RANDOM % 200)]
     fi
 
     #move top enemy
-    top_enemy_x=$[ $top_enemy_x - 2 ]
+    top_enemy_x=$[ $top_enemy_x - 4 ]
     if [ $[ -1 * $top_enemy_width ] -gt $top_enemy_x ]; then
         top_enemy_x=$[$SCREEN_WIDTH + ( $RANDOM % 100)]
     fi
