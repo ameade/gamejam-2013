@@ -137,8 +137,13 @@ function create_in_game_screen(){
 }
 
 function create_start_screen(){
-    for i in ${!start_screen[*]}; do
+    for ((i=0; i<=$SCREEN_HEIGHT; i++)); do
         # make empty
+        #TODO: Wtf can't i do 100 spaces?
+        div=$( printf "%*s" "$SCREEN_WIDTH");
+        screen[$i]=${div// /$BACKGROUND_CHAR}
+    done
+    for i in ${!start_screen[*]}; do
         line="${start_screen[$i]}"
         screen[$i]=$line
     done
