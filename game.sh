@@ -186,6 +186,7 @@ function create_death_screen(){
         line="${death_screen[$i]}"
         screen[$i]=$line
     done
+    screen[22]="Score $score"
 }
 
 function create_start_screen(){
